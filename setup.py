@@ -16,7 +16,7 @@ with open("requirements.txt", 'r') as requires:
 
 setuptools.setup(
     name="SupercellSWF",
-    version="0.1.0.0",
+    version="0.1.0.1",
     author="Fred31-pavel-sokov",
     author_email="fred20rus@gmail.com",
     description=description,
