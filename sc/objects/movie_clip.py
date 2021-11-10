@@ -246,7 +246,7 @@ class MovieClip(Tag):
             index.save(self.transform_storage_id)
 
             self.write_unsigned_char(index.tag)
-            self.read_unsigned_int(len(index.buffer))
+            self.write_unsigned_int(len(index.buffer))
             self.write(index.buffer)
         
         for frame in self.frames:
@@ -260,7 +260,7 @@ class MovieClip(Tag):
             self.scaling_grid.save()
 
             self.write_unsigned_char(self.scaling_grid.tag)
-            self.read_unsigned_int(len(self.scaling_grid.buffer))
+            self.write_unsigned_int(len(self.scaling_grid.buffer))
             self.write(self.scaling_grid.buffer)
         
         self.write(bytes(5))
