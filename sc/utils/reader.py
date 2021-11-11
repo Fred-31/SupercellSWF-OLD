@@ -63,7 +63,7 @@ class Reader(BytesIO):
 
         return [
             [scale_x, rotation_x, x],
-            [scale_y, rotation_y, y]
+            [rotation_y, scale_y, y]
         ]
     
     def read_bgra(self):
