@@ -113,9 +113,9 @@ class TextField(Tag):
             self.write_bgra(self.font_outline_color)
         
         if self.tag in (33, 44):
-            self.write_unsigned_short(self.transform1)
-            self.write_unsigned_short(self.transform2)
+            self.write_short(self.transform1)
+            self.write_short(self.transform2)
 
             if self.tag == 44:
-                self.write_unsigned_short(self.transform3)
+                self.write_short(self.transform3)
                 self.write_bool(self.modifier7)

@@ -404,11 +404,11 @@ class SupercellSWF:
             
             if self.movie_clip_modifiers:
                 modifiers = MovieClipModifiers()
-                modifiers.save()
+                modifiers.save(self)
                 write_object(modifiers)
             
             for modifier in self.movie_clip_modifiers:
-                modifier.save(self)
+                modifier.save()
                 write_object(modifier)
             
             for shape in self.shapes:

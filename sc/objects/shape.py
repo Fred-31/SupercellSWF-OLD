@@ -25,6 +25,7 @@ class Shape(Tag):
 
         self._bitmaps = [_cls() for _cls in [Bitmap] * bitmaps_count]
 
+        # Find usage
         points_count = 4 * bitmaps_count
         if self.tag == 18:
             points_count = self.read_unsigned_short()
