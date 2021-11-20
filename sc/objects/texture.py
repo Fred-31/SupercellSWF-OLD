@@ -27,7 +27,7 @@ class SWFTexture(Tag):
         elif mode == "L":
             self.pixel_type = 10
         else:
-            raise TypeError("Unsupported Image mode for SWFTexture, %s" % mode)
+            raise TypeError(f"Unsupported Image mode for SWFTexture, {mode}")
 
         self.image = image
     
@@ -76,7 +76,7 @@ class SWFTexture(Tag):
                     return self.read_unsigned_char()
             
             else:
-                raise TypeError("Unknown SWFTexture pixel type, %s" % self.pixel_type)
+                raise TypeError(f"Unknown SWFTexture pixel type, {self.pixel_type}")
 
             image = Image.new(mode, (self.width, self.height))
 

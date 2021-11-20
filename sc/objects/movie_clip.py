@@ -1,7 +1,12 @@
 from .tag import Tag
 
+from .shape import Shape
+
 from .matrix import Matrix2x3
 from .color_transform import ColorTransform
+
+import math
+from PIL import Image
 
 
 
@@ -264,6 +269,48 @@ class MovieClip(Tag):
             self.write(self.scaling_grid.buffer)
         
         self.write(bytes(5))
+    
+    def render(self, fp: str):
+        frames = []
+        for frame in self.frames:
+            if not frame.resources:
+                continue
+
+            frame_images = []
+            for bind_index in frame.resources:
+                if not isinstance(self.binds[bind_index], Shape):
+                    continue
+
+                image = self.binds[bind_index].to_image()
+
+                matrix = frame.resources[bind_index]["matrix"]
+                if matrix is not None:
+                    scale_x, scale_y = matrix.get_scale()
+                    angle = matrix.get_rotation()
+                    x, y = matrix.get_translation()
+
+                    image = transform_image(image, scale_x, scale_y, angle, x, y)
+                
+                frame_images.append(image)
+            
+            if frame_images:
+                width = max(image.size[0] for image in frame_images)
+                height = max(image.size[1] for image in frame_images)
+                frame_size = width, height
+
+                frame_image = Image.new("RGBA", frame_size)
+                for image in frame_images:
+                    frame_image.paste(image, (0, 0), image)
+                
+                frames.append(frame_image)
+        
+        if frames:
+            animation_width = max(image.size[0] for image in frames)
+            animation_height = max(image.size[1] for image in frames)
+            animation_size = animation_width, animation_height
+
+            animation = Image.new("RGBA", animation_size)
+            animation.save(fp, save_all=True, append_images=frames[1:], optimize=False, loop=0, duration=100)
 
 
 class Frame(Tag):
@@ -330,3 +377,41 @@ class TransformStorageIndex(Tag):
         super().save()
 
         self.write_unsigned_char(index)
+
+
+def transform_image(image, scale_x, scale_y, angle, x, y):
+    im_orig = image
+    image = Image.new('RGBA', im_orig.size, (255, 255, 255, 255))
+    image.paste(im_orig)
+
+    w, h = image.size
+    angle = -angle
+
+    cos_theta = math.cos(angle)
+    sin_theta = math.sin(angle)
+
+    scaled_w, scaled_h = w * scale_x, h * scale_y
+
+    scaled_rotated_w = int(math.ceil(math.fabs(cos_theta * scaled_w) + math.fabs(sin_theta * scaled_h)))
+    scaled_rotated_h = int(math.ceil(math.fabs(sin_theta * scaled_w) + math.fabs(cos_theta * scaled_h)))
+
+    translated_w = int(math.ceil(scaled_rotated_w + math.fabs(x)))
+    translated_h = int(math.ceil(scaled_rotated_h + math.fabs(y)))
+    if x > 0:
+        x = 0
+    if y > 0:
+        y = 0
+
+    cx = w / 2.
+    cy = h / 2.
+    translate_x = scaled_rotated_w / 2. - x
+    translate_y = scaled_rotated_h / 2. - y
+
+    a = cos_theta / scale_x
+    b = sin_theta / scale_x
+    c = cx - translate_x * a - translate_y * b
+    d = -sin_theta / scale_y
+    e = cos_theta / scale_y
+    f = cy - translate_x * d - translate_y * e
+
+    return image.transform((translated_w, translated_h), Image.AFFINE, (a, b, c, d, e, f), resample=Image.BILINEAR)
