@@ -4,7 +4,7 @@ Version 0.1.0.5
 
 ## About
 
-Editing tool (read/write) .sc files (*_tes.sc , *.sc, *_dl.sc ) from Supercell games (Brawl Stars, Clash Royale, Clash of Clans and others). This is a test version, so it may contain bugs (if you find it, please write about it to me in Discord or Issues). Special thanks to Selce for some information about .sc and Vorono4ka for his sc-compression module (also some parts of working with textures were based on his code, don't forget..).
+Editing tool (read/write) .sc files (*_tes.sc , *.sc, *_dl.sc ) from Supercell games (Brawl Stars, Clash Royale, Clash of Clans and others). This is a test version, so it may contain bugs (if you find it, please write about it to me in Discord (fred31#1473) or Issues). Special thanks to Selce for some information about .sc and Vorono4ka for his sc-compression module (also some parts of working with textures were based on his code, don't forget..).
 
 
 ## Install
